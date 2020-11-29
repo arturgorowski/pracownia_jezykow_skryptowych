@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const devicesPowerInformationSchema = new mongoose.Schema({
     referral: { type: String },
@@ -30,4 +30,4 @@ async function getAllData() {
 module.exports = {
     getAllData: getAllData,
     model: DevicesPowerInformationModel
-}
+};

@@ -8,7 +8,7 @@ let energyClass = 'no data',
     producent = 'no data';
 
 /**
- * 
+ *
  * funkcja parsująca obiekt html na informacje zużyciu energii podanym przez producenta
  */
 const parseResponseHtml = (html, model) => {
@@ -50,6 +50,6 @@ const parseResponseHtml = (html, model) => {
             reject(error);
         }
     });
-}
+};
 
-module.exports = { parseResponseHtml };
+module.exports = {parseResponseHtml};

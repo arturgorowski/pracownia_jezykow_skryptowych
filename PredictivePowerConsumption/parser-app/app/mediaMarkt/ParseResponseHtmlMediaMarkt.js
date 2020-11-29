@@ -1,7 +1,6 @@
 const cheerio = require('cheerio');
 
 /**
- * 
  * klasa parsująca obiekt html na informacje zużyciu energii podanym przez producenta
  */
 // class ParseResponseHtmlMediaMarkt {
@@ -21,59 +20,59 @@ function getPowerNode(productName, deviceType, div) {
                 case 'bluRay':
                     productName = productName.slice(8);
                     powerNode = div[0].childNodes[9];
-                    resolve({ productName, powerNode });
+                    resolve({productName, powerNode});
                     break;
 
                 case 'cooker':
                     productName = productName.slice(8);
                     powerNode = div[0].childNodes[3];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode });
+                    resolve({productName, powerNode, noiseNode});
                     break;
 
                 case 'dryer':
                     productName = productName.slice(9);
                     powerNode = div[0].childNodes[3];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode });
-                //break;
+                    resolve({productName, powerNode, noiseNode});
+                    break;
 
                 case 'fridge':
-                    productName.split(" ", 1)[0].length === 7 ? productName = productName.slice(8) : productName = productName.slice(11)
+                    productName.split(" ", 1)[0].length === 7 ? productName = productName.slice(8) : productName = productName.slice(11);
                     powerNode = div[0].childNodes[3];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode });
+                    resolve({productName, powerNode, noiseNode});
                     break;
 
                 case 'homeTheaterSet':
                     productName = productName.slice(12);
                     powerNode = div[0].childNodes[13];
-                    resolve({ productName, powerNode });
+                    resolve({productName, powerNode});
                     break;
 
                 case 'oven':
                     productName = productName.slice(10);
                     powerNode = div[0].childNodes[5];
-                    resolve({ productName, powerNode });
+                    resolve({productName, powerNode});
                     break;
 
                 case 'soundbar':
                     productName = productName.slice(9);
                     powerNode = div[0].childNodes[11];
-                    resolve({ productName, powerNode });
+                    resolve({productName, powerNode});
                     break;
 
                 case 'tv':
                     productName = productName.slice(10);
                     powerNode = div[0].childNodes[13];
-                    resolve({ productName, powerNode });
+                    resolve({productName, powerNode});
                     break;
 
                 case 'washer':
                     productName = productName.slice(9);
                     powerNode = div[0].childNodes[3];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode });
+                    resolve({productName, powerNode, noiseNode});
                     break;
 
                 case 'washerDryer':
@@ -81,7 +80,7 @@ function getPowerNode(productName, deviceType, div) {
                     energyClassNode = div[0].childNodes[3];
                     powerNode = div[0].childNodes[5];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode, energyClassNode });
+                    resolve({productName, powerNode, noiseNode, energyClassNode});
                     break;
 
                 case 'washingMachine':
@@ -89,17 +88,18 @@ function getPowerNode(productName, deviceType, div) {
                     energyClassNode = div[0].childNodes[3];
                     powerNode = div[0].childNodes[5];
                     noiseNode = div[0].childNodes[1];
-                    resolve({ productName, powerNode, noiseNode, energyClassNode });
+                    resolve({productName, powerNode, noiseNode, energyClassNode});
                     break;
             }
-        } catch (error) { reject(error) }
+        } catch (error) {
+            reject(error)
+        }
 
-    })
+    });
 }
 
 
 /**
- * 
  * funkcja parsująca obiekt html na informacje zużyciu energii podanym przez producenta
  */
 function parseResponseHtml(html, model, deviceType) {
@@ -154,7 +154,7 @@ function parseResponseHtml(html, model, deviceType) {
                             annualEnergyConsumption = Number($(item).find("dd").text().trim());
 
                             powerConsumption = annualEnergyConsumption / 366
-                            powerConsumption = Math.round(powerConsumption * 100) / 100 
+                            powerConsumption = Math.round(powerConsumption * 100) / 100
                         }
 
                         //oven >>>>>>> kWh
@@ -215,11 +215,15 @@ function parseResponseHtml(html, model, deviceType) {
                 });
                 resolve(allData);
 
-            }).catch((error) => { return error })
+            }).catch((error) => {
+                return error
+            })
 
             //resolve(allData);
 
-        } catch (error) { reject(error) }
+        } catch (error) {
+            reject(error)
+        }
 
     })
 
@@ -228,4 +232,4 @@ function parseResponseHtml(html, model, deviceType) {
 //}
 
 //module.exports = { ParseResponseHtmlMediaMarkt }
-module.exports = { parseResponseHtml }
+module.exports = {parseResponseHtml}

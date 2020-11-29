@@ -4,12 +4,12 @@ const DeviceListParser = require('../app').DeviceListParser;
 const mongoose = require('mongoose');
 
 const getAllData = require('../DAO/tvDAO').getAllData;
-mongoose.connect('mongodb://localhost/predictivePowerConsumption', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/predictivePowerConsumption', {useNewUrlParser: true});
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 
-let parseResponseHtmlMediaMarkt = require('../mediaMarkt/parsers/tv').parseResponseHtml;
-let parseResponseHtmlMediaExpert = require('../mediaExpert/parsers/tv').parseResponseHtml;
+// let parseResponseHtmlMediaMarkt = require('../mediaMarkt/parsers/tv').parseResponseHtml;
+// let parseResponseHtmlMediaExpert = require('../mediaExpert/parsers/tv').parseResponseHtml;
 let parseResponseHtmlEuroRtvAgd = require('../euroRtvAgd/parsers/tv').parseResponseHtml;
 
 const listScrapper = new DeviceListParser();
@@ -18,21 +18,22 @@ let allData = [];
 //let allData = require('./allUrlData');
 
 getAllData().then((result) => {
-    //console.log("result >>>", result);
+    // console.log("result >>>", result);
 
     result.forEach(element => {
-        allUrlData.push({ name: element.name, address: element.address });
+        allUrlData.push({name: element.name, address: element.address});
     });
 
-    let objects = []
+    let objects = [];
     for (let i = 0; i < allUrlData.length; i += 10) {
-        let sliced = allUrlData.slice(i, i + 10)
+        let sliced = allUrlData.slice(i, i + 10);
         objects.push(sliced)
     }
 
+    console.log(objects[1]);
     callingData(objects[1]).then((response) => {
-        console.log("just right now", response)
-        allData.push(response)
+        console.log("just right now", response);
+        allData.push(response);
     })
 
     // let request = objects.map((item) => {
@@ -67,57 +68,71 @@ getAllData().then((result) => {
     // });
 
 }).catch(error => {
-    console.log("ERR getAllData >>>", error)
+    console.log("ERR getAllData >>>", error);
     return error;
-})
+});
 
 /**
- * 
+ *
  * pasruje adresy URL na obiekty <html>, następnie parsuje obiekty dla każdego urządzenia i zwraca informacje o poborze mocy
  */
 function callingData(allUrlData) {
     return listScrapper.getScrapperList(allUrlData).then(htmlObject => {
         return new Promise((resolve, reject) => {
-            //console.log(htmlObject)
-            let len = (htmlObject.length) / 2;
-            for (let i = len; i < htmlObject.length; i++) {
+            try {
+                let len = (htmlObject.length) / 2;
+                for (let i = len; i < htmlObject.length; i++) {
 
-                let htmlType = '';
-                if (htmlObject[i].indexOf('mediamarkt') > -1) htmlType = 'mediamarkt';
-                if (htmlObject[i].indexOf('Mediaexpert.pl') > -1) htmlType = 'mediaexpert';
-                if (htmlObject[i].indexOf('www.euro.com.pl') > -1) htmlType = 'eurortvagd';
+                    let htmlType = 'eurortvagd';
+                    // if (htmlObject[i].indexOf('mediamarkt') > -1) htmlType = 'mediamarkt';
+                    // if (htmlObject[i].indexOf('Mediaexpert.pl') > -1) htmlType = 'mediaexpert';
+                    // if (htmlObject[i].indexOf('www.euro.com.pl') > -1) htmlType = 'eurortvagd';
 
-                switch (htmlType) {
+                    parseResponseHtmlEuroRtvAgd(htmlObject[i]).then(response => {
+                        return allData.push(response);
+                        //return response
+                    }).catch(err => {
+                        return err
+                    });
 
-                    case 'mediamarkt':
-                        parseResponseHtmlMediaMarkt(htmlObject[i]).then(response => {
-                            return allData.push(response);
-                            //return response
-                        }).catch(err => { return err });
-                        break;
+                    // switch (htmlType) {
+                    //
+                    //     case 'mediamarkt':
+                    //         parseResponseHtmlMediaMarkt(htmlObject[i]).then(response => {
+                    //             return allData.push(response);
+                    //             //return response
+                    //         }).catch(err => {
+                    //             return err
+                    //         });
+                    //         break;
+                    //
+                    //     case 'mediaexpert':
+                    //         parseResponseHtmlMediaExpert(htmlObject[i]).then(response => {
+                    //             //console.log(response);
+                    //             return allData.push(response);
+                    //             //return response
+                    //         }).catch(err => {
+                    //             return err
+                    //         });
+                    //         break;
+                    //
+                    //     case 'eurortvagd':
+                    //         parseResponseHtmlEuroRtvAgd(htmlObject[i]).then(response => {
+                    //             return allData.push(response);
+                    //             //return response
+                    //         }).catch(err => {
+                    //             return err
+                    //         });
+                    //         break;
+                    // }
 
-                    case 'mediaexpert':
-                        parseResponseHtmlMediaExpert(htmlObject[i]).then(response => {
-                            //console.log(response);
-                            return allData.push(response);
-                            //return response
-                        }).catch(err => { return err });
-                        break;
-
-                    case 'eurortvagd':
-                        parseResponseHtmlEuroRtvAgd(htmlObject[i]).then(response => {
-                            return allData.push(response);
-                            //return response
-                        }).catch(err => { return err });
-                        break;
                 }
-
+                resolve(allData);
+                console.log("all data >>>", allData);
+                console.log("END >>>");
+            } catch (error) {
+                reject(error);
             }
-            resolve(allData);
-            //console.log("all data >>>", allData)
-            console.log("END >>>")
-        }).catch(error => {
-            reject(error)
         })
-    })
+    });
 }

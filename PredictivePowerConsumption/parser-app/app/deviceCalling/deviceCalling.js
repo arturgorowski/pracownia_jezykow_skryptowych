@@ -1,6 +1,6 @@
-let responseHtmlMediaMarkt = require('../mediaMarkt/ParseResponseHtmlMediaMarkt').parseResponseHtml
-let responseHtmlMediaExpert = require('../mediaExpert/ParseResponseHtmlMediaExpert').parseResponseHtml
-let responseHtmlEuroRtvAgd = require('../euroRtvAgd/ParseResponseHtmlEuroRtvAgd').parseResponseHtml
+let responseHtmlMediaMarkt = require('../mediaMarkt/ParseResponseHtmlMediaMarkt').parseResponseHtml;
+let responseHtmlMediaExpert = require('../mediaExpert/ParseResponseHtmlMediaExpert').parseResponseHtml;
+let responseHtmlEuroRtvAgd = require('../euroRtvAgd/ParseResponseHtmlEuroRtvAgd').parseResponseHtml;
 
 const DeviceListParser = require('../app').DeviceListParser;
 // const ParseResponseHtmlMediaMarkt = require('../mediaMarkt/ParseResponseHtmlMediaMarkt').ParseResponseHtmlMediaMarkt;
@@ -28,17 +28,17 @@ getAllData().then((result) => {
         allUrlData.push({ name: element.name, address: element.address, type: element.type, shop: element.shop, model: element.model });
     });
 
-    let objects = []
+    let objects = [];
     for (let i = 0; i < allUrlData.length; i += 20) {
-        let sliced = allUrlData.slice(i, i + 20)
-        objects.push(sliced)
+        let sliced = allUrlData.slice(i, i + 20);
+        objects.push(sliced);
     }
 
-    console.log(">>>>", objects.length)
+    console.log(">>>>", objects.length);
 
     //6, 8 nie poszło
     callingData(objects[ 16 ]).then((response) => {
-        console.log("just right now >>>", response)
+        console.log("just right now >>>", response);
 
         //allData.push(response)
         response.forEach((item) => {
@@ -54,18 +54,18 @@ getAllData().then((result) => {
                 noiseLevel: item[0].noiseLevel,
                 producent: item[0].producent,
                 model: item[0].model
-            })
+            });
             object.save();
 
-        })
+        });
         console.log("adding data succesfull")
 
-    })
+    });
 
 }).catch(error => {
-    console.log("ERR getAllData >>>", error)
+    console.log("ERR getAllData >>>", error);
     return error;
-})
+});
 
 /**
  * 
@@ -112,10 +112,10 @@ function callingData(allUrlData) {
 
             resolve(allData);
             //console.log("all data >>>", allData)
-            console.log("END >>>")
+            console.log("END >>>");
 
         }).catch(error => {
-            return error
+            return error;
         })
 
     })

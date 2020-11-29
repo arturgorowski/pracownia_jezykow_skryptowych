@@ -36,7 +36,7 @@ let addresses = [];
  */
 Promise.all([request1.getScrapperHtmlTab(), request2.getScrapperHtmlTab(), request3.getScrapperHtmlTab()/*, request4.getScrapperHtmlTab(), request5.getScrapperHtmlTab()*/]).then(promises => {
     
-    console.log(">>>> ALL PROMISES ENDED", promises)
+    console.log(">>>> ALL PROMISES ENDED", promises);
 
     let pop1 = promises.pop();
     let pop2 = promises.pop();
@@ -52,16 +52,16 @@ Promise.all([request1.getScrapperHtmlTab(), request2.getScrapperHtmlTab(), reque
         // if (pop5[i] !== undefined) allUrlData.push(pop5[i]);
     }
 
-    console.log("all data popped", allUrlData)
+    console.log("all data popped", allUrlData);
 
     allUrlData.forEach((item) => {
-        let object = new FridgeModel({name: item.name, address: item.address, shop: item.shop})
+        let object = new FridgeModel({name: item.name, address: item.address, shop: item.shop});
         //console.log(object)
         object.save();
-    })
+    });
 
     console.log("adding data succesful");
 
 }).catch(error => {
     return error
-})
+});

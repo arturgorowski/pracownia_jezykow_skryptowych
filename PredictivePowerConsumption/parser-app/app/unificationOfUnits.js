@@ -16,9 +16,9 @@ class UnificationOfUnits {
     // sparsowana tablica => detekcja urzadzenia => detekcja jednostki energii => zwrócenie jednostki w kWh
 
     getUnificateData(devices) {
-        console.log(devices)
+        console.log(devices);
 
-        let tableAfterUnification = []
+        let tableAfterUnification = [];
 
         return new Promise((resolve, reject) => {
 
@@ -28,7 +28,7 @@ class UnificationOfUnits {
                     tableAfterUnification.push(result)
                 }).catch(err => { reject(err) })
 
-            })
+            });
             resolve(tableAfterUnification)
 
         }).catch(err => { return err })
@@ -47,8 +47,8 @@ UnificationOfUnits.choiceShop = (referral) => {
         case 'euroRtvAgd':
             return new EuroRtvAgdUnification();
     }
-}
+};
 
 
 
-module.exports = { UnificationOfUnits }
+module.exports = { UnificationOfUnits };

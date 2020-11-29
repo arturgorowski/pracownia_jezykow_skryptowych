@@ -8,20 +8,25 @@ let energyClass = 'no data',
     producent = 'no data';
 
 /**
- * 
+ *
  * funkcja parsująca obiekt html na informacje zużyciu energii podanym przez producenta
- */ 
+ */
 function parseResponseHtml(html, model) {
     return new Promise((resolve, reject) => {
         try {
+            console.log('HELLO FROM PARSERS/TV.js');
             const allData = [];
 
-            const $ = cheerio.load(html);
+            const $ = cheerio.load(html.response);
             let attrProductName = $("h1.selenium-KP-product-name");
+            console.log("attr", attrProductName);
+
             let productName = attrProductName[0].childNodes[0].nodeValue.trim();
             producent = productName.split(" ", 1)[0];
             let div = $('table.description-tech-details.js-tech-details');
             const powerNode = div[0].childNodes[1].children.filter(item => item.type === "tag");
+
+            console.log(attrProductName, productName, producent, powerNode);
 
             let energyClassIndex = $("td:contains('Klasa energetyczna')").parent("tr").index();
             let powerConsumptionIndex = $("td:contains('Pobór mocy IEC 62087 Ed.2 (tryb włączenia)')").parent("tr").index();
@@ -62,4 +67,4 @@ function parseResponseHtml(html, model) {
     })
 }
 
-module.exports = { parseResponseHtml };
+module.exports = {parseResponseHtml};

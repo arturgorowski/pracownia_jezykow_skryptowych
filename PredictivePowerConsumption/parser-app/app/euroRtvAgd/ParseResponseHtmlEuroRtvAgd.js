@@ -193,4 +193,4 @@ function parseResponseHtml(html, model, deviceType) {
 
 }
 
-module.exports = { parseResponseHtml }
+module.exports = { parseResponseHtml };

@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 let rp = require('request-promise');
-let allUrlData = require('./allUrlData')
+let allUrlData = require('./allUrlData');
 
 const DeviceListMediaMarktParser = require('../app/mediaMarkt/DeviceMediaMarktParser').DeviceListMediaMarktParser;
 const DeviceListMediaExpertParser = require('../app/mediaExpert/DeviceMediaExpertParser').DeviceListMediaExpertParser;
@@ -28,7 +28,7 @@ class DeviceListParser {
 
         tvNameAndAddress.forEach((item) => {
             addresses.push({address: item.address, type: item.type, shop: item.shop, model: item.model})
-        })
+        });
 
         let it = 1;
         let promises = addresses.map(url => {
@@ -44,18 +44,18 @@ class DeviceListParser {
                         headers: {
                             'User-Agent': 'Request-Promise'
                         }
-                    }
+                    };
                     rp(options).then((response) => {
-                        console.log(it++)
+                        console.log(it++);
                         resolve({response, type: url.type, shop: url.shop, model: url.model})
                     }).catch((error) => {
-                        console.log("ERR getScrapperList >>>", error)
+                        console.log("ERR getScrapperList >>>", error);
                         reject(error)
                     });
 
                 }, 2 * 1000)
             })
-        })
+        });
 
         return promises.reduce((promiseChain, currentTask) => {
             return promiseChain
@@ -95,7 +95,7 @@ DeviceListParser.create = (market) => {
             return new DeviceListEuroRtvAgdParser();
             break;
     }
-}
+};
 
 //const listScrapper = new DeviceListParser();
 
@@ -120,37 +120,42 @@ class DeviceListUrlScrapper {
      */
     getMarketName() {
 
-        let urlType;
-        if (this.domain.includes("mediamarkt")) urlType = 'mediamarkt';
-        else if (this.domain.includes('mediaexpert')) urlType = 'mediaexpert';
-        else if (this.domain.includes('euro')) urlType = 'eurortvagd';
+        console.time("get euroRtvAgd data");
+        console.log('euro rtv agd here');
+        console.log(this.domain);
+        return 'eurortvagd';
 
-        switch (urlType) {
-
-            case 'mediamarkt':
-                console.time("get mediaMarkt data")
-                console.log('media markt here');
-                this.domain = this.domain + pageNumberMM
-                console.log(this.domain);
-                return 'mediamarkt';
-                break;
-
-            case 'mediaexpert':
-                console.time("get mediaExpert data")
-                console.log('media expert here');
-                this.domain = this.domain + pageNumberME
-                console.log(this.domain);
-                return 'mediaexpert';
-                break;
-
-            case 'eurortvagd':
-                console.time("get euroRtvAgd data")
-                console.log('euro rtv agd here');
-                this.domain = this.domain
-                console.log(this.domain);
-                return 'eurortvagd';
-                break;
-        }
+        // let urlType;
+        // if (this.domain.includes("mediamarkt")) urlType = 'mediamarkt';
+        // else if (this.domain.includes('mediaexpert')) urlType = 'mediaexpert';
+        // else if (this.domain.includes('euro')) urlType = 'eurortvagd';
+        //
+        // switch (urlType) {
+        //
+        //     case 'mediamarkt':
+        //         console.time("get mediaMarkt data");
+        //         console.log('media markt here');
+        //         this.domain = this.domain + pageNumberMM;
+        //         console.log(this.domain);
+        //         return 'mediamarkt';
+        //         break;
+        //
+        //     case 'mediaexpert':
+        //         console.time("get mediaExpert data");
+        //         console.log('media expert here');
+        //         this.domain = this.domain + pageNumberME;
+        //         console.log(this.domain);
+        //         return 'mediaexpert';
+        //         break;
+        //
+        //     case 'eurortvagd':
+        //         console.time("get euroRtvAgd data");
+        //         console.log('euro rtv agd here');
+        //         this.domain = this.domain;
+        //         console.log(this.domain);
+        //         return 'eurortvagd';
+        //         break;
+        // }
     }
 
     /**
@@ -159,7 +164,7 @@ class DeviceListUrlScrapper {
      */
     getScrapperHtmlTab() {
         return this.getNameAndAddresses().then(response => {
-            console.log(response)
+            console.log(response);
             //return listScrapper.getScrapperList(response);
             return response;
 
@@ -182,4 +187,4 @@ class DeviceListUrlScrapper {
     }
 }
 
-module.exports = { DeviceListUrlScrapper, DeviceListParser }
+module.exports = { DeviceListUrlScrapper, DeviceListParser };

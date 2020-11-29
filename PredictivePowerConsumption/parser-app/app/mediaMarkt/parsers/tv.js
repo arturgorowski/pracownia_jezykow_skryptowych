@@ -54,6 +54,6 @@ const parseResponseHtml = (html, model) => {
             reject(error);
         }
     });
-}
+};
 
 module.exports = { parseResponseHtml };

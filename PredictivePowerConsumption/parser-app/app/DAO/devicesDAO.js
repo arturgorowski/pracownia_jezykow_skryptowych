@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const devicesSchema = new mongoose.Schema({
     name: { type: String },
@@ -37,4 +37,4 @@ module.exports = {
     getAllData: getAllData,
     model: DevicesModel,
     model2: NewDevicesModel
-}
+};
