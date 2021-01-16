@@ -6,8 +6,8 @@ mongoose.connect('mongodb://localhost/predictivePowerConsumption', { useNewUrlPa
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 
-const url1 = 'https://mediamarkt.pl/rtv-i-telewizory/kino-domowe/soundbary?limit=100&page=';
-const url2 = 'https://www.mediaexpert.pl/soundbary?per_page=50&start=';
+// const url1 = 'https://mediamarkt.pl/rtv-i-telewizory/kino-domowe/soundbary?limit=100&page=';
+// const url2 = 'https://www.mediaexpert.pl/soundbary?per_page=50&start=';
 const url3 = 'https://www.euro.com.pl/soundbar-speakerbar.bhtml?link=mainnavi';
 
 /**

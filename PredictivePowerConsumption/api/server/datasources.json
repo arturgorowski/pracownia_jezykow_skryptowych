@@ -47,16 +47,5 @@
     "useNewUrlParser": true,
     "connector": "mongodb",
     "allowExtendedOperators": true
-  },
-  "devicesPowerInformation": {
-    "port": 27017,
-    "url": "mongodb+srv://admin:admin@cluster0-zqaox.mongodb.net/predictivePowerConsumption",
-    "database": "predictivePowerConsumption",
-    "name": "devicesPowerInformation",
-    "username": "admin",
-    "password": "admin",
-    "useNewUrlParser": true,
-    "connector": "mongodb",
-    "allowExtendedOperators": true
   }
 }

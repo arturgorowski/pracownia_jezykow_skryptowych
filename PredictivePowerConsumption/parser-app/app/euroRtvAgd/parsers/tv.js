@@ -17,7 +17,7 @@ function parseResponseHtml(html, model) {
             console.log('HELLO FROM PARSERS/TV.js');
             const allData = [];
 
-            const $ = cheerio.load(html.response);
+            const $ = cheerio.load(html);
             let attrProductName = $("h1.selenium-KP-product-name");
             console.log("attr", attrProductName);
 

@@ -48,7 +48,7 @@
     "public": true
   },
   "devicesPowerInformation": {
-    "dataSource": "devicesPowerInformation",
+    "dataSource": "devicesPowerInformations",
     "public": true
   }
 }

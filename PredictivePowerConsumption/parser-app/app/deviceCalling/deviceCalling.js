@@ -1,13 +1,16 @@
 let responseHtmlMediaMarkt = require('../mediaMarkt/ParseResponseHtmlMediaMarkt').parseResponseHtml;
 let responseHtmlMediaExpert = require('../mediaExpert/ParseResponseHtmlMediaExpert').parseResponseHtml;
-let responseHtmlEuroRtvAgd = require('../euroRtvAgd/ParseResponseHtmlEuroRtvAgd').parseResponseHtml;
+// let responseHtmlEuroRtvAgd = require('../euroRtvAgd/ParseResponseHtmlEuroRtvAgd').parseResponseHtml;
+let responseHtmlEuroRtvAgd = require('../euroRtvAgd/parsers/tv').parseResponseHtml;
+
 
 const DeviceListParser = require('../app').DeviceListParser;
 // const ParseResponseHtmlMediaMarkt = require('../mediaMarkt/ParseResponseHtmlMediaMarkt').ParseResponseHtmlMediaMarkt;
 // const ParseResponseHtmlMediaExpert = require('../mediaExpert/ParseResponseHtmlMediaExpert').ParseResponseHtmlMediaExpert;
 // const ParseResponseHtmlEuroRtvAgd = require('../euroRtvAgd/ParseResponseHtmlEuroRtvAgd').ParseResponseHtmlEuroRtvAgd;
 const mongoose = require('mongoose');
-const getAllData = require('../DAO/devicesDAO').getAllData;
+// const getAllData = require('../DAO/devicesDAO').getAllData;
+const getAllData = require('../DAO/tvDAO').getAllData;
 mongoose.connect('mongodb://localhost/predictivePowerConsumption', { useNewUrlParser: true });
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
@@ -22,7 +25,7 @@ let allUrlData = [];
 let allData = [];
 
 getAllData().then((result) => {
-    //console.log("result >>>", result);
+    // console.log("result >>>", result);
 
     result.forEach(element => {
         allUrlData.push({ name: element.name, address: element.address, type: element.type, shop: element.shop, model: element.model });
@@ -37,7 +40,7 @@ getAllData().then((result) => {
     console.log(">>>>", objects.length);
 
     //6, 8 nie poszło
-    callingData(objects[ 16 ]).then((response) => {
+    callingData(objects[ 2 ]).then((response) => {
         console.log("just right now >>>", response);
 
         //allData.push(response)
@@ -85,25 +88,29 @@ function callingData(allUrlData) {
                 deviceType = htmlObject[i].type;
                 model = htmlObject[i].model;
 
-                if (shopType === 'mediaMarkt') {
+                // if (shopType === 'mediaMarkt') {
 
-                    responseHtmlMediaMarkt(htmlObject[i].response, model, deviceType).then(response => {
-                        return allData.push(response);
-                    }).catch(err => { reject(err) });
+                //     responseHtmlMediaMarkt(htmlObject[i].response, model, deviceType).then(response => {
+                //         return allData.push(response);
+                //     }).catch(err => { reject(err) });
 
-                }
+                // }
 
-                if (shopType === 'mediaExpert') {
+                // if (shopType === 'mediaExpert') {
 
-                    responseHtmlMediaExpert(htmlObject[i].response, model, deviceType).then(response => {
-                        return allData.push(response);
-                    }).catch(err => { reject(err) });
+                //     responseHtmlMediaExpert(htmlObject[i].response, model, deviceType).then(response => {
+                //         return allData.push(response);
+                //     }).catch(err => { reject(err) });
 
-                }
+                // }
 
                 if (shopType === 'euroRtvAgd') {
+                    console.log('euroRtvAgd');
 
-                    responseHtmlEuroRtvAgd(htmlObject[i].response, model, deviceType).then(response => {
+                    // responseHtmlEuroRtvAgd(htmlObject[i].response, model, deviceType).then(response => {
+
+                    responseHtmlEuroRtvAgd(htmlObject[i].response, model).then(response => {
+                        console.log('euroRtvAgd', response);
                         return allData.push(response);
                     }).catch(err => { reject(err) });
 
@@ -111,7 +118,7 @@ function callingData(allUrlData) {
             }
 
             resolve(allData);
-            //console.log("all data >>>", allData)
+            console.log("all data >>>", allData)
             console.log("END >>>");
 
         }).catch(error => {

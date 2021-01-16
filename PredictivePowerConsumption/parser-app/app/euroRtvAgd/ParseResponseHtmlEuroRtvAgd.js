@@ -115,7 +115,7 @@ function parseResponseHtml(html, model, deviceType) {
 
 
             getPowerNode(deviceType, $).then(result => {
-                //console.log("result", result)
+                console.log("result", result)
 
                 let energyClassIdx = $("td:contains('Klasa energetyczna')").parent("tr").index();
                 let noiseLevelIdx = $("td:contains('Poziom hałasu')").parent("tr").index();
@@ -127,7 +127,7 @@ function parseResponseHtml(html, model, deviceType) {
                 producent = productName.split(" ", 1)[0];
                 noiseLevelIdx = noiseLevelIdx > 0 ? noiseLevelIdx : result.noiseLevelIdx
 
-                //console.log(">>>>", energyClassIdx, powerConsumptionIdx, powerConsumptionStandbyIdx, annualEnergyConsumptionIdx, noiseLevelIdx)
+                console.log(">>>>", energyClassIdx, powerConsumptionIdx, powerConsumptionStandbyIdx, annualEnergyConsumptionIdx, noiseLevelIdx)
 
                 if (powerConsumptionIdx > 0) {
                     powerConsumption = powerNode[powerConsumptionIdx].children.filter(item => item.type === "tag")[1].children[0].nodeValue.trim();
@@ -182,7 +182,7 @@ function parseResponseHtml(html, model, deviceType) {
                     producent,
                     model
                 });
-                //console.log(allData);
+                console.log(allData);
                 resolve(allData);
 
             }).catch((error) => { return error })
