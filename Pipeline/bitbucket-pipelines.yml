@@ -1,0 +1,104 @@
+image: node:13.10.1
+
+definitions:
+  steps:
+    - step: &prepare
+        name: 'Prepare environment'
+        caches:
+          - node
+        script:
+          - npm install -g n
+          - n 8.9.4
+          - npm install
+    - step: &project1-dev
+        name: 'Build PROJECT1-DEV'
+        deployment: dev-project1
+        size: 2x
+        caches:
+          - node
+        script:
+          - npm install -g @angular/cli
+          - sh environments.sh
+          - npm run build:ssr:project1-dev
+          - find /opt/atlassian/pipelines/agent/build/dist/project1 -type d -exec chmod 755 {} +
+          - find /opt/atlassian/pipelines/agent/build/dist/project1 -type f -exec chmod 644 {} +
+          - (umask  077 ; echo $PROJECT1_DEV_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa)
+          - ssh -i ~/.ssh/id_rsa $SERVER_USER@$PROJECT1_DEV_SERVER "rm -rf /srv/www/platforma-ssr/dist/project1/*"
+          - scp -i ~/.ssh/id_rsa -r /opt/atlassian/pipelines/agent/build/dist/project1/* $SERVER_USER@$PROJECT1_DEV_SERVER:/srv/www/platforma-ssr/dist/project1
+          - ssh -i ~/.ssh/id_rsa -t $SERVER_USER@$PROJECT1_DEV_SERVER "bash -ci ~/skrypty/restartAngularPlatform.sh"
+        artifacts:
+          - 'dist/project1/**'
+    - step: &project1-prod
+        name: 'Build PROJECT1-PROD'
+        deployment: prod-project1
+        size: 2x
+        caches:
+          - node
+        script:
+          - npm install -g @angular/cli
+          - sh environments.sh
+          - npm run ssr:project1
+          - find /opt/atlassian/pipelines/agent/build/dist/project1 -type d -exec chmod 755 {} +
+          - find /opt/atlassian/pipelines/agent/build/dist/project1 -type f -exec chmod 644 {} +
+          - (umask  077 ; echo $PROJECT1_PROD_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa)
+          - ssh -i ~/.ssh/id_rsa $SERVER_USER@$PROJECT1_PROD_SERVER "rm -rf /srv/www/platforma-ssr/dist/project1/*"
+          - scp -i ~/.ssh/id_rsa -r /opt/atlassian/pipelines/agent/build/dist/project1/* $SERVER_USER@$PROJECT1_PROD_SERVER:/srv/www/platforma-ssr/dist/project1
+          - ssh -i ~/.ssh/id_rsa -t $SERVER_USER@$PROJECT1_PROD_SERVER "bash -ci ~/skrypty/restartAngularPlatform.sh"
+        artifacts:
+          - 'dist/project1/**'
+    - step: &project2-dev
+        name: 'Build PROJECT2-DEV'
+        deployment: dev-project2
+        size: 2x
+        caches:
+          - node
+        script:
+          - npm install -g @angular/cli
+          - sh environments.sh
+          - npm run build:ssr:project2-dev
+          - find /opt/atlassian/pipelines/agent/build/dist/project2 -type d -exec chmod 755 {} +
+          - find /opt/atlassian/pipelines/agent/build/dist/project2 -type f -exec chmod 644 {} +
+          - (umask  077 ; echo $PROJECT2_DEV_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa)
+          - ssh -i ~/.ssh/id_rsa $SERVER_USER@$PROJECT2_DEV_SERVER "rm -rf /srv/www/platforma-ssr/dist/project2/*"
+          - scp -i ~/.ssh/id_rsa -r /opt/atlassian/pipelines/agent/build/dist/project2/* $SERVER_USER@$PROJECT2_DEV_SERVER:/srv/www/platforma-ssr/dist/project2
+          - ssh -i ~/.ssh/id_rsa -t $SERVER_USER@$PROJECT2_DEV_SERVER "bash -ci ~/skrypty/restartAngularPlatform.sh"
+        artifacts:
+          - 'dist/project2/**'
+    - step: &project3-dev
+        name: 'Build PROJECT3-DEV'
+        deployment: dev-project3
+        size: 2x
+        caches:
+          - node
+        script:
+          - npm install -g @angular/cli
+          - sh environments.sh
+          - ng build project3 --configuration=dev
+          - find /opt/atlassian/pipelines/agent/build/dist/project3 -type d -exec chmod 755 {} +
+          - find /opt/atlassian/pipelines/agent/build/dist/project3 -type f -exec chmod 644 {} +
+          - (umask  077 ; echo $PROJECT3_DEV_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa)
+          - ssh -i ~/.ssh/id_rsa $SERVER_USER@$PROJECT3_DEV_SERVER "rm -rf /srv/www/platforma/*"
+          - scp -i ~/.ssh/id_rsa -r /opt/atlassian/pipelines/agent/build/dist/project3/* $SERVER_USER@$PROJECT3_DEV_SERVER:/srv/www/platforma
+        artifacts:
+          - 'dist/project3/**'
+
+pipelines:
+  custom:
+    develop:
+      - step: *prepare
+      - parallel:
+          - step: *project1-dev
+          - step: *project2-dev
+          - step: *project3-dev
+    project1-dev:
+      - step: *prepare
+      - step: *project1-dev
+    project1-prod:
+      - step: *prepare
+      - step: *project1-prod
+    project2-dev:
+      - step: *prepare
+      - step: *project2-dev
+    project3-dev:
+      - step: *prepare
+      - step: *project3-dev

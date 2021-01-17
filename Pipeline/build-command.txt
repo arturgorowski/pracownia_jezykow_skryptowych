@@ -1,0 +1,8 @@
+"build:ssr:project2-dev":       "npm run build:client-and-server-bundles-dev:project2 && npm run compile:server:project2",
+
+"build:ssr:project1":           "npm run build:client-and-server-bundles:project1 && npm run compile:server:project1",
+"build:ssr:project1-dev":       "npm run build:client-and-server-bundles-dev:project1 && npm run compile:server:project1",
+
+project1 //ed
+project2 //cd
+project3 //sk
